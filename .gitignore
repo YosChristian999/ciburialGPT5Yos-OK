@@ -1,0 +1,34 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs & cache
+*.log
+storage/
+cache/
+backend/logs/
+
+# Secrets / env
+.env
+*.env
+backend/.env
+backend/config/.env
+
+# Uploads/generated (jangan commit)
+uploads/
+ciburial/uploads/
+backend/uploads/
+
+# Media berat (opsional, biar repo ringan)
+*.mp4
+*.mov
+*.avi
+*.zip
+*.7z
+
+# Node/Build (kalau nanti ada)
+node_modules/
+dist/
+build/
