@@ -4,6 +4,7 @@
 backend/config/.env
 *.key
 *.pem
+/backend/.env
 
 # === build/cache/temp ===
 vendor/
