@@ -2,24 +2,28 @@
 declare(strict_types=1);
 header('Content-Type: application/json; charset=utf-8');
 
-require_once __DIR__ . '/../../config/env.php';
+try {
+  $envPath = __DIR__ . '/../../config/env.php'; // -> backend/config/env.php
+  if (!file_exists($envPath)) {
+    http_response_code(500);
+    echo json_encode(['ok'=>false,'error'=>'env.php not found','path'=>$envPath]); exit;
+  }
+  require_once $envPath;
+  if (!function_exists('env')) {
+    http_response_code(500);
+    echo json_encode(['ok'=>false,'error'=>'env() helper missing (cek env.php)']); exit;
+  }
 
-$client = env('MIDTRANS_CLIENT_KEY', '');
-$isProd = filter_var(env('MIDTRANS_IS_PRODUCTION', 'false'), FILTER_VALIDATE_BOOLEAN);
+  $client = (string) env('MIDTRANS_CLIENT_KEY', '');
+  $isProd = filter_var((string) env('MIDTRANS_IS_PRODUCTION','false'), FILTER_VALIDATE_BOOLEAN);
 
-if ($client === '') {
+  if ($client === '') {
+    http_response_code(500);
+    echo json_encode(['ok'=>false,'error'=>'MIDTRANS_CLIENT_KEY belum diset di .env']); exit;
+  }
+
+  echo json_encode(['ok'=>true,'client_key'=>$client,'is_production'=>$isProd]);
+} catch (Throwable $e) {
   http_response_code(500);
-  echo json_encode(['ok'=>false,'error'=>'MIDTRANS_CLIENT_KEY belum diset di .env']);
-  exit;
+  echo json_encode(['ok'=>false,'error'=>'PHP error: '.$e->getMessage()]);
 }
-
-$snap_url = $isProd
-  ? 'https://app.midtrans.com/snap/snap.js'
-  : 'https://app.sandbox.midtrans.com/snap/snap.js';
-
-echo json_encode([
-  'ok'            => true,
-  'client_key'    => $client,
-  'is_production' => $isProd,
-  'snap_url'      => $snap_url
-]);
