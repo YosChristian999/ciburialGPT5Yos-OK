@@ -22,7 +22,7 @@ body{margin:0; font-family:Poppins,system-ui,Segoe UI,Arial,sans-serif; color:va
 /* hero */
 .hero{
   position:relative; min-height:62vh; display:grid; place-items:center; text-align:center;
-  background: #0b1020 url('../BGHero.jpg') center/cover no-repeat fixed;
+  background: #0b1020 url('https://sewavilla.ciburialpuncak.com/ciburial/assets/BGHero.jpg') center/cover no-repeat fixed;
 }
 .hero .overlay{position:absolute;inset:0;background:rgba(0,0,0,.35)}
 .hero .container{position:relative}
