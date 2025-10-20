@@ -1,0 +1,18 @@
+/* Villa Ciburial Puncak - CSS Styles */
+/* Import dari file utama */
+@import url('./style.css');
+
+/* Tambahan styles khusus untuk halaman tertentu */
+.auth-container{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)}
+.auth-card{background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-radius:15px;padding:2rem;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:400px}
+.contact-section{padding:4rem 0;background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%)}
+.contact-card{background:white;border-radius:15px;padding:2rem;box-shadow:0 10px 30px rgba(0,0,0,.1);margin-bottom:2rem}
+.contact-info{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-radius:15px;padding:2rem}
+.contact-info h4{margin-bottom:1.5rem;font-weight:600}
+.contact-info .contact-item{display:flex;align-items:center;margin-bottom:1rem}
+.contact-info .contact-item i{margin-right:1rem;font-size:1.2rem;color:#ffd700}
+@media (max-width:768px){
+  .auth-card,.contact-card,.contact-info{margin:1rem;padding:1.5rem}
+}

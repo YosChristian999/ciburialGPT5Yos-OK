@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chat | Ciburial Puncak</title>
+<style>
+body{font-family:system-ui,Segoe UI,Roboto; margin:0; background:#0b1020; color:#e6f1ff}
+.header{padding:14px 16px; background:#121a3a; border-bottom:1px solid rgba(255,255,255,.08)}
+.container{display:grid; grid-template-columns: 280px 1fr; min-height:calc(100vh - 56px)}
+.sidebar{border-right:1px solid rgba(255,255,255,.08); background:#0f1430; overflow:auto}
+.main{display:flex; flex-direction:column}
+.list{list-style:none; padding:0; margin:0}
+.item{padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.06); cursor:pointer}
+.item:hover{background:#121a3a}
+.messages{flex:1; padding:16px; overflow:auto}
+.bubble{max-width:68%; padding:10px 12px; border-radius:12px; margin:8px 0}
+.me{background:#1f2b63; margin-left:auto}
+.other{background:#15204a}
+.form{display:flex; gap:8px; padding:12px; border-top:1px solid rgba(255,255,255,.08); background:#0f1430}
+input,button{font:inherit}
+input[type=text]{flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.15); background:#0b1020; color:#e6f1ff}
+button{padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.15); background:#1f2b63; color:#e6f1ff; cursor:pointer}
+</style>
+</head>
+<body>
+<div class="header"><b>Chat</b> — percakapan booking kamu</div>
+<div class="container">
+  <aside class="sidebar">
+    <ul id="convList" class="list"></ul>
+  </aside>
+  <section class="main">
+    <div id="messages" class="messages"></div>
+    <div class="form">
+      <input id="msgInput" type="text" placeholder="Tulis pesan... (jangan bagikan nomor HP)">
+      <button onclick="sendMsg()">Kirim</button>
+    </div>
+  </section>
+</div>
+
+<script>
+let currentBookingId = null;
+let pollTimer = null;
+
+async function loadConversations(){
+  const r = await fetch('/backend/api/chat/get_conversations.php', {credentials:'include'});
+  const j = await r.json();
+  const list = document.getElementById('convList');
+  list.innerHTML = '';
+  if (!j.ok) { list.innerHTML = '<li class="item">Gagal memuat</li>'; return; }
+  j.data.forEach(c=>{
+    const li = document.createElement('li');
+    li.className='item';
+    li.textContent = `[${c.order_id}] ${c.nama_villa || ''} ${c.customer_name?(' - ' + c.customer_name):''}`;
+    li.onclick=()=>openConv(c.booking_id);
+    list.appendChild(li);
+  });
+}
+
+async function openConv(bookingId){
+  currentBookingId = bookingId;
+  await loadMessages();
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(loadMessages, 5000);
+}
+
+async function loadMessages(){
+  if (!currentBookingId) return;
+  const r = await fetch('/backend/api/chat/get_messages.php?booking_id='+currentBookingId, {credentials:'include'});
+  const j = await r.json();
+  const box = document.getElementById('messages');
+  box.innerHTML = '';
+  if (!j.ok) { box.textContent='Gagal memuat pesan'; return; }
+  const meId = await whoami();
+  j.data.forEach(m=>{
+    const div = document.createElement('div');
+    div.className = 'bubble ' + (m.sender_id==meId ? 'me':'other');
+    div.textContent = m.sender_name + ': ' + m.message_text;
+    box.appendChild(div);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+async function sendMsg(){
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text || !currentBookingId) return;
+  const r = await fetch('/backend/api/chat/send_message.php', {
+    method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+    body: JSON.stringify({ booking_id: currentBookingId, message: text })
+  });
+  const j = await r.json();
+  if (j.ok) { input.value=''; loadMessages(); }
+}
+
+async function whoami(){
+  // pakai endpoint check_auth kamu; fallback: balikkan null -> maka "me" bubble tidak aktif
+  try {
+    const r = await fetch('/backend/api/auth/check_auth.php', {credentials:'include'}); 
+    const j = await r.json();
+    return j?.data?.user?.id || null;
+  } catch(e){ return null; }
+}
+
+loadConversations();
+</script>
+</body>
+</html>

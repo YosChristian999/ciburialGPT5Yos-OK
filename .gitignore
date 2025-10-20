@@ -1,34 +1,21 @@
-# OS / editor
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
-
-# Logs & cache
-*.log
-storage/
-cache/
-backend/logs/
-
-# Secrets / env
+@'
+# === secrets & config ===
 .env
-*.env
-backend/.env
 backend/config/.env
+*.key
+*.pem
 
-# Uploads/generated (jangan commit)
-uploads/
-ciburial/uploads/
-backend/uploads/
-
-# Media berat (opsional, biar repo ringan)
-*.mp4
-*.mov
-*.avi
-*.zip
-*.7z
-
-# Node/Build (kalau nanti ada)
+# === build/cache/temp ===
+vendor/
 node_modules/
 dist/
-build/
+.DS_Store
+Thumbs.db
+
+# === upload & media berat (optional, simpan nanti di storage/CDN) ===
+uploads/
+assets/images/Villas/*/*.mp4
+
+# === editor/IDE ===
+.vscode/
+'@ | Set-Content -Encoding UTF8 .gitignore
