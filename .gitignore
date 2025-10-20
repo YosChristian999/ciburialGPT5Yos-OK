@@ -19,3 +19,6 @@ assets/images/Villas/*/*.mp4
 # === editor/IDE ===
 .vscode/
 '@ | Set-Content -Encoding UTF8 .gitignore
+# system
+.DS_Store
+Thumbs.db
