@@ -101,10 +101,9 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
   <!-- Snap.js SANDBOX -->
-  <script src="https://app.sandbox.midtrans.com/snap/snap.js"
-          data-client-key="SB-Mid-client-FPqouMXyxCqFD0rd"></script>
-
+ 
 <script>
 function basePath(){ return location.pathname.replace(/[^\/]+$/, ''); }
 const rupiah = n => 'Rp ' + Number(n||0).toLocaleString('id-ID');
@@ -260,6 +259,7 @@ document.getElementById('out').addEventListener('change', calc);
 document.getElementById('payPlan').addEventListener('change', calc);
 
 // ====== Midtrans: token + snap.pay ======
+
 async function createSnapToken(payload){
   const res  = await fetch('/ciburial/backend/api/payments/token.php', {
     method:'POST',
@@ -325,6 +325,7 @@ document.getElementById('payBtn').addEventListener('click', async ()=> {
 // start
 loadDetail();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 let snapReady = (async ()=>{
   const r = await fetch('/ciburial/backend/api/payments/snap-client-key.php', {cache:'no-store'});
@@ -341,6 +342,7 @@ let snapReady = (async ()=>{
   });
 })();
 </script>
+
 
 
 </body>
