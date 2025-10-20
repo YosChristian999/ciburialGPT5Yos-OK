@@ -117,7 +117,7 @@
 
   let RAW=[], VIEW=[];
   async function fetchVillas(){
-    const res = await fetch('/ciburial/backend/api/villas/list.php', {cache:'no-store'});
+    const res = await fetch('/backend/api/villas/list.php', {cache:'no-store'});
     const txt = await res.text();
     let j; try{ j=JSON.parse(txt);}catch{ throw new Error('list.php bukan JSON: '+txt.slice(0,200));}
     if(j.ok===false) throw new Error(j.error||'Gagal memuat');
